@@ -3,20 +3,27 @@
 
 enum colour {RED, BLACK, DOUBLEBLACK};
 
-struct {
+struct Node{
     int data;
     int colour;
     Node *left, *right, *parent;
+    explicit Node(int);
 };
 
 class Tree
 {
     public:
-        Tree();
+        Tree(){root = nullptr;};
         virtual ~Tree();
         void insertValue(int);
         void deleteValue(int);
+        void insertFix(Node *);
+        void deleteFix(Node *);
+        void leftRotation(Node *);
+        void rightRotation(Node *);
         void findNode();
+        void setColour(Node *, int);
+        int getColour(Node *);
 
     protected:
 

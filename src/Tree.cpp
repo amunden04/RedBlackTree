@@ -9,6 +9,10 @@ Node::Node(int data) {
     left = right = parent = nullptr;
 }
 
+Tree::Tree() {
+    root = nullptr;
+}
+
 int Tree::getColour(Node* node) {
     if (node == nullptr)
         return BLACK;
@@ -125,6 +129,22 @@ void Tree::rightRotation(Node* x) {
     x->parent = y;
 }
 
+Node* Tree::findNode(Node *x,int k) {
+  // base case
+  if(x->data == k)
+    return x;
+
+  if(k<x->data)
+    return findNode(x->left,k);
+  else
+    return findNode(x->right,k);
+}
+
+void Tree::findTest(int k) {
+  Node *x = findNode(root,k);
+  cout << "Node found is: " << x->data << " Left child is: " << x->left->data /*<< " Right child is: " << x->right->data*/;
+}
+
 void Tree::transplant(Node* u, Node* v) {
   if(u->parent == nullptr)
     root = v;
@@ -133,6 +153,29 @@ void Tree::transplant(Node* u, Node* v) {
   else
     u->parent->right = v;
   v->parent = u->parent;
+}
+
+Node* Tree::successor(Node *x){
+  if(x->right != nullptr)
+    return findMin(x->right);
+  Node *y = x->parent;
+  while(y != nullptr) {
+    x = y;
+    y = y->parent;
+  }
+  return y;
+}
+
+Node* Tree::findMin(Node *x) {
+  while (x->left!=nullptr)
+    x = x->left;
+  return x;
+}
+
+Node* Tree::findMax(Node *x) {
+  while (x->right!=nullptr)
+    x = x->right;
+  return x;
 }
 
 void Tree::deleteValue(Node* node){

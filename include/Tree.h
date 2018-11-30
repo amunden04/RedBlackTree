@@ -10,10 +10,10 @@ struct Node{
     explicit Node(int);
 };
 
-class Tree
-{
+class Tree{
+
     public:
-        Tree(){root = nullptr;};
+        Tree();
         virtual ~Tree(){};
         void addValue(int);
         Node* insertNode(Node *, Node*);
@@ -22,15 +22,20 @@ class Tree
         void deleteFix(Node *);
         void leftRotation(Node *);
         void rightRotation(Node *);
-        void findNode();
+        Node* findNode(Node*, int);
+        void findTest(int);
         void setColour(Node *, int);
         int getColour(Node *);
         void transplant(Node*, Node*);
+        Node* successor(Node*);
+        Node* findMin(Node*);
+        Node* findMax(Node*);
         void walk();
         void print(Node*, int);
 
     private:
-        Node *root;
+        Node* root;
+
 };
 
 #endif // TREE_H

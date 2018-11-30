@@ -17,11 +17,12 @@ class Tree{
         virtual ~Tree(){};
         void addValue(int);
         Node* insertNode(Node *, Node*);
-        void deleteValue(Node*);
+        void deleteValue(int);
         void insertFix(Node *);
         void deleteFix(Node *);
         void leftRotation(Node *);
         void rightRotation(Node *);
+        Node* findNode(int);
         Node* findNode(Node*, int);
         void findTest(int);
         void setColour(Node *, int);

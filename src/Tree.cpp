@@ -42,22 +42,134 @@ Node* Tree::insertNode(Node* root, Node* node) {
 }
 
 void Tree::insertFix(Node* node) {
+    Node* parent = nullptr;
+    Node* grandparent = nullptr;
+    while(node != root && getColour(node) == RED && getColour(node->parent) == RED)
+    {
+        parent = node->parent;
+        grandparent = parent->parent;
+        if(parent == grandparent->left){
+            Node* uncle = grandparent->right;
+            if(getColour(uncle) == RED)
+            {
+            setColour(uncle, BLACK);
+            setColour(parent, BLACK);
+            setColour(grandparent, RED);
+            node = grandparent;
+            } else {
+                if(node == parent->right){
+                node = parent;
+                leftRotation(parent);
+                parent = node->parent;
+            }
+            rightRotation(grandparent);
+            swap(parent->colour, grandparent->colour);
+            node = parent;
+            }
+        } else {
+             Node* uncle = grandparent->left;
+            if(getColour(uncle) == RED)
+            {
+                setColour(uncle, BLACK);
+                setColour(parent, BLACK);
+                setColour(grandparent, RED);
+                node = grandparent;
+            } else {
+            if(node == parent->left){
+                 node = parent;
+                rightRotation(parent);
+                parent = node->parent;
+            }
+            leftRotation(grandparent);
+            swap(parent->colour, grandparent->colour);
+            node = parent;
+        }
+    }
+        }
+    setColour(root, BLACK);
+}
+
+void Tree::leftRotation(Node* x) {
+    Node* y = x->right;
+    x->right = y->left;
+    if(x->right != nullptr)
+        x->right->parent = x;
+    y->parent = x->parent;
+
+    if(x->parent == nullptr)
+       root = y;
+    else if(x == x->parent->left)
+        x->parent->left = y;
+    else
+        x->parent->right = y;
+
+    y->left = x;
+    x->parent = y;
+}
+
+void Tree::rightRotation(Node* x) {
+    Node* y = x->left;
+    x->left = y->right;
+    if(x->left != nullptr)
+        x->left->parent = x;
+    y->parent = x->parent;
+
+    if(x->parent == nullptr)
+       root = y;
+    else if(x == x->parent->left)
+        x->parent->left = y;
+    else
+        x->parent->right = y;
+
+    y->right = x;
+    x->parent = y;
+}
+
+void Tree::transplant(Node* u, Node* v) {
+  if(u->parent == nullptr)
+    root = v;
+  else if(u==u->parent->left)
+    u->parent->left = v;
+  else
+    u->parent->right = v;
+  v->parent = u->parent;
+}
+
+void Tree::deleteValue(Node* node){
 
 
 }
 
-void Tree::leftRotation(Node* node) {
+void Tree::deleteFix(Node* node) {
 
 
 }
 
-void Tree::rightRotation(Node* node) {
-
-
+void Tree::walk() {
+  print(root,1);
 }
 
-void Tree::displayTree() {
-    cout << root->data << " " << root->colour << endl;
-    cout << root->left->data << " " << root->left->colour << " "
-         << root->right->data << " " << root->right->colour << endl;
+void Tree::print(Node *x, int space)
+{
+    // Base case
+    if (x == nullptr)
+        return;
+    int COUNT = 1;
+    if(COUNT == -1)
+      COUNT = 1;
+    space += COUNT;
+
+    // Process right child first
+    print(x->right, space);
+
+    // Print current node after space
+    // count
+    cout << endl;
+    for (int i = COUNT; i < space; i++)
+        cout << "   ";
+    cout << x->data << "(" << x->colour << ")" << endl;
+
+    // Process left child
+    print(x->left, space);
+
 }

@@ -14,10 +14,10 @@ class Tree
 {
     public:
         Tree(){root = nullptr;};
-       // virtual ~Tree();
+        virtual ~Tree(){};
         void addValue(int);
         Node* insertNode(Node *, Node*);
-        void deleteValue(int);
+        void deleteValue(Node*);
         void insertFix(Node *);
         void deleteFix(Node *);
         void leftRotation(Node *);
@@ -25,9 +25,9 @@ class Tree
         void findNode();
         void setColour(Node *, int);
         int getColour(Node *);
-        void displayTree();
-
-    protected:
+        void transplant(Node*, Node*);
+        void walk();
+        void print(Node*, int);
 
     private:
         Node *root;

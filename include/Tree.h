@@ -14,8 +14,9 @@ class Tree
 {
     public:
         Tree(){root = nullptr;};
-        virtual ~Tree();
-        void insertValue(int);
+       // virtual ~Tree();
+        void addValue(int);
+        Node* insertNode(Node *, Node*);
         void deleteValue(int);
         void insertFix(Node *);
         void deleteFix(Node *);
@@ -24,6 +25,7 @@ class Tree
         void findNode();
         void setColour(Node *, int);
         int getColour(Node *);
+        void displayTree();
 
     protected:
 

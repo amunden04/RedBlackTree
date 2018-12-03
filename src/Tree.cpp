@@ -32,7 +32,7 @@ void Tree::addValue(int n) {
 }
 
 Node* Tree::insertNode(Node* root, Node* node) {
-  if(root == nullptr)
+  if (root == nullptr)
     return node;
 
   if(node->data < root->data) {
@@ -43,6 +43,7 @@ Node* Tree::insertNode(Node* root, Node* node) {
     root->right->parent = root;
   }
   return root;
+
 }
 
 void Tree::insertFix(Node* node) {
@@ -130,37 +131,31 @@ Node* Tree::findNode(int k) {
   return findNode(root,k);
 }
 
-Node* Tree::findNode(Node *x,int k) {
-  // base case
+Node* Tree::findNode(Node* x, int k) {
   if(x->data == k)
     return x;
-
-  if(k<x->data) {
-        if(x->left == nullptr) {
-            return nullptr;
-        }
-    return findNode(x->left,k);
+  if (k < x->data) {
+    if(x->left == nullptr)
+      return nullptr;
+    return findNode(x->left, k);
   } else {
-      if(x->right == nullptr){
-        return nullptr;
-      }
-    return findNode(x->right,k);
-}
+    if(x->right == nullptr)
+      return nullptr;
+    return findNode(x->right, k);
+  }
 }
 
 void Tree::findTest(int k) {
   Node *x = findNode(root,k);
-  cout << "Node found is: " << x->data << " Left child is: " << x->left->data /*<< " Right child is: " << x->right->data*/;
+  cout << "Node found is: " << x->data << " Left child is: " << x->left->data
+       << " Right child is: " << x->right->data;
 }
 
 void Tree::transplant(Node* u, Node* v) {
-  if(u->parent == nullptr)
-    root = v;
-  else if(u==u->parent->left)
+  if(u==u->parent->left)
     u->parent->left = v;
   else
     u->parent->right = v;
-  v->parent = u->parent;
 }
 
 Node* Tree::successor(Node *x) {
@@ -187,99 +182,121 @@ Node* Tree::findMax(Node *x) {
 }
 
 void Tree::deleteValue(int k) {
-    if(findNode(k) == nullptr)
-        return;
-
-  Node *z = findNode(k);
-  Node *y = findNode(k);
-  Node *x = nullptr;
-  int yOriginalColour = y->colour;
-  if (z->left == nullptr) {
-    x = z->right;
-    transplant(z,z->right);
-  } else if(z->right == nullptr) {
-    x = z->left;
-    transplant(z,z->left);
-  } else {
-    y = findMin(z->right);
-    yOriginalColour = y->colour;
-    x=y->right;
-    if(y->parent == z)
-      x->parent = y;
-    else {
-      transplant(y,y->right);
-      y->right = z->right;
-      y->right->parent = y;
-    }
-    transplant(z,y);
-    y->left = z->left;
-    y->left->parent = y;
-    y->colour = z->colour;
+  Node* x = findNode(k);
+  Node* y = nullptr;
+  if(x == nullptr){
+    x = nullptr;
+  }else {
+  if(x->right == nullptr)
+    y = x;
+  else {
+    y = findMin(x->right);
+    x->data = y->data;
   }
-  if(yOriginalColour==BLACK) {
-    deleteFix(x);
-  }
+  deleteFix(y);
+}
 }
 
 void Tree::deleteFix(Node* x) {
-    if (x == nullptr)
-        return;
+  if (x == nullptr)
+    return;
 
-    if (x == root) {
-        root = nullptr;
-        return;
+  if (x == root) {
+    root = nullptr;
+    return;
+  }
+
+  if (getColour(x) == RED || getColour(x->left) == RED || getColour(x->right) == RED) {
+    Node* child = nullptr;
+    if(x->left != nullptr) {
+      child = x->left;
+    } else {
+      child = x->right;
     }
+    transplant(x, child);
+    setColour(child, BLACK);
+    delete (x);
 
-    while(x != root && x->colour == BLACK) {
-        if(x == x->parent->left) {
-            Node* w =x->parent->right;
-            if(w->colour == RED) {
-                setColour(w, BLACK);
-                setColour(x->parent, RED);
-                leftRotation(x->parent);
-                w = x->parent->right;
-            }
-            if(w->left->colour == BLACK && w->right->colour == BLACK) {
-                setColour(w, RED);
-                x = x->parent;
-            } else if (w->right->colour == BLACK) {
-                setColour(w->left, BLACK);
-                setColour(w, RED);
-                rightRotation(w);
-                w = x->parent->right;
-            }
-            setColour(w, getColour(x->parent));
-            setColour(x->parent, BLACK);
-            setColour(w->right, BLACK);
-            leftRotation(x->parent);
-            x = root;
+  } else {
+    Node* sibling = nullptr;
+    Node* parent = nullptr;
+    Node* y = x;
+    setColour(y, DOUBLEBLACK);
+    while(y != root && getColour(y) == DOUBLEBLACK) {
+      parent = y->parent;
+      if(y == parent->left) {
+        sibling = parent->right;
+        //Case 1
+        if(getColour(sibling) == RED) {
+          setColour(sibling, BLACK);
+          setColour(parent, RED);
+          leftRotation(parent);
         } else {
-        if(x == x->parent->right) {
-            Node* w =x->parent->left;
-            if(w->colour == RED) {
-                setColour(w, BLACK);
-                setColour(x->parent, RED);
-                rightRotation(x->parent);
-                w = x->parent->left;
+          //Case 2
+          if(getColour(sibling->left) == BLACK && getColour(sibling->right) == BLACK) {
+            setColour(sibling, RED);
+            if (getColour(parent) == RED)
+              setColour(parent, BLACK);
+            else
+              setColour(parent, DOUBLEBLACK);
+            y = parent;
+          } else {
+            //Case 3
+            if(getColour(sibling->right) == BLACK) {
+              setColour(sibling->left, BLACK);
+              setColour(sibling, RED);
+              rightRotation(sibling);
+              sibling = parent->right;
             }
-            if(w->right->colour == BLACK && w->left->colour == BLACK) {
-                setColour(w, RED);
-                x = x->parent;
-            } else if (w->left->colour == BLACK) {
-                setColour(w->right, BLACK);
-                setColour(w, RED);
-                leftRotation(w);
-                w = x->parent->left;
+            setColour(sibling, getColour(parent));
+            setColour(parent, BLACK);
+            setColour(sibling->right, BLACK);
+            leftRotation(parent);
+            break;
+          }
+        }
+      } else {
+        // Opposite Way
+        sibling = parent->left;
+        // Case 1
+        if(getColour(sibling) == RED) {
+          setColour(sibling, BLACK);
+          setColour(parent, RED);
+          rightRotation(parent);
+        } else {
+          // Case 2
+          if(getColour(sibling->left) == BLACK && getColour(sibling->right) == BLACK) {
+            setColour(sibling, RED);
+            if (getColour(parent) == RED)
+              setColour(parent, BLACK);
+            else
+              setColour(parent, DOUBLEBLACK);
+            y = parent;
+          } else {
+            // Case 3
+            if(getColour(sibling->left) == BLACK) {
+              setColour(sibling->right, BLACK);
+              setColour(sibling, RED);
+              leftRotation(sibling);
+              sibling = parent->left;
             }
-            setColour(w, getColour(x->parent));
-            setColour(x->parent, BLACK);
-            setColour(w->right, BLACK);
-            leftRotation(x->parent);
-            x = root;
+            setColour(sibling, getColour(parent));
+            setColour(parent, BLACK);
+            setColour(sibling->left, BLACK);
+            rightRotation(parent);
+            break;
+          }
         }
-        }
+      }
     }
- setColour(x, BLACK);
+    if(y == x->parent->left)
+      x->parent->left = nullptr;
+    else
+      x->parent->right = nullptr;
+    delete (x);
+
+    setColour(root, BLACK);
+  }
 }
 
 void Tree::walk() {

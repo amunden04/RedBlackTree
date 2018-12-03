@@ -222,55 +222,63 @@ void Tree::deleteValue(int k) {
 }
 
 void Tree::deleteFix(Node* x) {
-    Node* sibling = nullptr;
-    while(x != root && getColour(x) == BLACK) {
-        if(x == x->parent->left){
-            sibling = x->parent->right;
-            if(getColour(sibling) == RED) {
-                setColour(sibling, BLACK);
-                setColour(x->parent, RED);
-                leftRotation(x->parent);
-                sibling = x->parent->right;
-            }
-            if(getColour(sibling->left) == BLACK && getColour(sibling->right) == BLACK){
-                setColour(sibling, RED);
-                x = x->parent;
-            } else if (getColour(sibling->right) == BLACK) {
-                setColour(sibling->left, BLACK);
-                setColour(sibling, RED);
-                rightRotation(sibling);
-                sibling = x->parent->right;
-            }
-            setColour(sibling, getColour(x->parent));
-            setColour(x->parent, BLACK);
-            setColour(sibling->right, BLACK);
-            leftRotation(x->parent);
-            x = root;
-    } else {
-             sibling = x->parent->left;
-            if(getColour(sibling) == RED) {
-                setColour(sibling, BLACK);
-                setColour(x->parent, RED);
-                rightRotation(x->parent);
-                sibling = x->parent->left;
-            }
-            if(getColour(sibling->left) == BLACK && getColour(sibling->right) == BLACK){
-                setColour(sibling, RED);
-                x = x->parent;
-            } else if (getColour(sibling->left) == BLACK) {
-                setColour(sibling->right, BLACK);
-                setColour(sibling, RED);
-                leftRotation(sibling);
-                sibling = x->parent->left;
-            }
-            setColour(sibling, getColour(x->parent));
-            setColour(x->parent, BLACK);
-            setColour(sibling->left, BLACK);
-            rightRotation(x->parent);
-            x = root;
-    }
+    if (x == nullptr)
+        return;
+
+    if (x == root) {
+        root = nullptr;
+        return;
     }
 
+    while(x != root && x->colour == BLACK) {
+        if(x == x->parent->left) {
+            Node* w =x->parent->right;
+            if(w->colour == RED) {
+                setColour(w, BLACK);
+                setColour(x->parent, RED);
+                leftRotation(x->parent);
+                w = x->parent->right;
+            }
+            if(w->left->colour == BLACK && w->right->colour == BLACK) {
+                setColour(w, RED);
+                x = x->parent;
+            } else if (w->right->colour == BLACK) {
+                setColour(w->left, BLACK);
+                setColour(w, RED);
+                rightRotation(w);
+                w = x->parent->right;
+            }
+            setColour(w, getColour(x->parent));
+            setColour(x->parent, BLACK);
+            setColour(w->right, BLACK);
+            leftRotation(x->parent);
+            x = root;
+        } else {
+        if(x == x->parent->right) {
+            Node* w =x->parent->left;
+            if(w->colour == RED) {
+                setColour(w, BLACK);
+                setColour(x->parent, RED);
+                rightRotation(x->parent);
+                w = x->parent->left;
+            }
+            if(w->right->colour == BLACK && w->left->colour == BLACK) {
+                setColour(w, RED);
+                x = x->parent;
+            } else if (w->left->colour == BLACK) {
+                setColour(w->right, BLACK);
+                setColour(w, RED);
+                leftRotation(w);
+                w = x->parent->left;
+            }
+            setColour(w, getColour(x->parent));
+            setColour(x->parent, BLACK);
+            setColour(w->right, BLACK);
+            leftRotation(x->parent);
+            x = root;
+        }
+        }
+    }
  setColour(x, BLACK);
 }
 

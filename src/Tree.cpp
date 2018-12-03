@@ -147,8 +147,8 @@ Node* Tree::findNode(Node* x, int k) {
 
 void Tree::findTest(int k) {
   Node *x = findNode(root,k);
-  cout << "Node found is: " << x->data << " Left child is: " << x->left->data
-       << " Right child is: " << x->right->data;
+  //cout << "Node found is: " << x->data << " Left child is: " << x->left->data
+      // << " Right child is: " << x->right->data;
 }
 
 void Tree::transplant(Node* u, Node* v) {

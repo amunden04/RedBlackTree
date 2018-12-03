@@ -9,7 +9,7 @@ using namespace std;
 
 int main()
 {
-    /*Tree t;
+   /* Tree t;
     cout << "Tree with nothing" << endl;
     t.walk();
     t.addValue(8);
@@ -42,10 +42,13 @@ int main()
       t.deleteValue(5);
     cout << "Delete five" << endl;
     t.walk();
-    */
+       t.deleteValue(2);
+    cout << "Delete two" << endl;
+    t.walk();
+*/
 
     using namespace std::chrono;
-    high_resolution_clock::time_point t1 = high_resolution_clock::now();
+    //high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
     Tree r;
     ifstream inFile;
@@ -61,35 +64,30 @@ int main()
         r.addValue(x);
     }
 
-   // r.deleteValue(3724);
-    //r.deleteValue(6821);
-    //r.deleteValue(3201);
-    //r.deleteValue(2635);
-   // r.deleteValue(1607);
-   // r.deleteValue(2668);
-
     inFile.close();
-    high_resolution_clock::time_point t2 = high_resolution_clock::now();
-    duration<double> time_span = duration_cast<duration<double>>(t2-t1);
-    std:: cout << "It took " << time_span.count() << " seconds." << std::endl;
+    //high_resolution_clock::time_point t2 = high_resolution_clock::now();
+    //duration<double> time_span = duration_cast<duration<double>>(t2-t1);
+    //std:: cout << "It took " << time_span.count() << " seconds." << std::endl;
 
-    //high_resolution_clock::time_point t3 = high_resolution_clock::now();
-   /* ifstream fin;
+   high_resolution_clock::time_point t3 = high_resolution_clock::now();
+   ifstream fin;
    fin.open("delete.txt");
 
     if(!fin) {
         cerr << "Unable to open file";
         exit(1);
     }
-
+   // int counter = 0;
     while(fin >> x) {
         r.deleteValue(x);
+        //cout << counter << endl;
+        //counter++;
     }
 
-    fin.close();*/
-    //high_resolution_clock::time_point t4 = high_resolution_clock::now();
-    //duration<double> time_span = duration_cast<duration<double>>(t4-t3);
-    //std:: cout << "It took " << time_span.count() << " seconds." << std::endl;
+    fin.close();
+    high_resolution_clock::time_point t4 = high_resolution_clock::now();
+    duration<double> time_span = duration_cast<duration<double>>(t4-t3);
+    std:: cout << "It took " << time_span.count() << " seconds." << std::endl;
 
     return 0;
 }

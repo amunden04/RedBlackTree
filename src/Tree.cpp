@@ -198,9 +198,11 @@ void Tree::deleteValue(int k) {
 }
 
 void Tree::deleteFix(Node* x) {
+    //Test if delete was called on a non-existing key
   if (x == nullptr)
     return;
 
+    //Test if x is root
   if (x == root) {
     root = nullptr;
     return;
@@ -216,23 +218,24 @@ void Tree::deleteFix(Node* x) {
     transplant(x, child);
     setColour(child, BLACK);
     delete (x);
-
   } else {
     Node* sibling = nullptr;
     Node* parent = nullptr;
     Node* y = x;
     setColour(y, DOUBLEBLACK);
+
+    //While x is not the root and is still DOUBLEBLACK
     while(y != root && getColour(y) == DOUBLEBLACK) {
       parent = y->parent;
       if(y == parent->left) {
         sibling = parent->right;
-        //Case 1
+        //Case 1 - can only result in cases 2,3, or 4
         if(getColour(sibling) == RED) {
           setColour(sibling, BLACK);
           setColour(parent, RED);
           leftRotation(parent);
-        } else {
-          //Case 2
+        } else { //Everything in this else is either case 2, 3, or 4
+          //Case 2 - solves DOUBLEBLACK and so while loop won't execute afer case 2
           if(getColour(sibling->left) == BLACK && getColour(sibling->right) == BLACK) {
             setColour(sibling, RED);
             if (getColour(parent) == RED)
@@ -240,8 +243,9 @@ void Tree::deleteFix(Node* x) {
             else
               setColour(parent, DOUBLEBLACK);
             y = parent;
+            //else either case 3 or case 4 apply
           } else {
-            //Case 3
+            //Case 3 applies -- always results in case 4
             if(getColour(sibling->right) == BLACK) {
               setColour(sibling->left, BLACK);
               setColour(sibling, RED);
@@ -256,7 +260,7 @@ void Tree::deleteFix(Node* x) {
           }
         }
       } else {
-        // Opposite Way
+        // Symmetrical to first 4 cases
         sibling = parent->left;
         // Case 1
         if(getColour(sibling) == RED) {
